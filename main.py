@@ -111,6 +111,8 @@ def createAccount():
         print("\nAccount Created!\n")
         return signIn(userName, password2)
         break
+  else:
+    print("\nThat username already exists!\n")
 
 def getDoc(username):
   return db.collection("test1").document(f"{username}").get()
@@ -148,7 +150,6 @@ def main():
       if credentials:
         viewData(credentials[0])
       else:
-        credentials = ""
         print("\nYou must sign in before viewing data!\n")
     elif choice == '4':
       # Are you signed in?
