@@ -22,3 +22,7 @@ You can install the required packages using pip:
 
 ```bash
 pip install firebase-admin python-dotenv
+```
+
+## Demo
+Click [here](https://youtu.be/JWWRpLN_dY4) to watch the application work on YouTube!
