@@ -76,16 +76,28 @@ def viewData(username):
     print(f"\nNo document found for username: {username}\n")
 
 
-
-def updateData(uN):
+def updateStatus(uN):
   viewData(uN)
   documentToUpdate = input("Which document would you like to update?: ")
 
-  udatedData = input("What is the status of this application?: ")
-
-
+  # Get the document reference and fetch the current status
   doc_ref = getDocRaw(uN)
-  doc_ref.update({documentToUpdate: udatedData})
+  current_data = doc_ref.get()
+  
+  # Retrieve the old status from the document
+  old_status = current_data.get(documentToUpdate)
+
+  # Prompt for the new status
+  updatedData = input("What is the status of this application?: ")
+
+  # Update the document with the new status
+  doc_ref.update({documentToUpdate: updatedData})
+
+  # Print the old and new status
+  print(f"\n{documentToUpdate} has been updated from '{old_status}', to '{updatedData}'\n")
+
+
+
 
 def addApplication(uN):
   companyName = input("What is the name of the company that you applied for?: ")
@@ -114,11 +126,60 @@ def createAccount():
   else:
     print("\nThat username already exists!\n")
 
+def updateCompanyName(username, old_field, new_field):
+  # Reference to the document (replace 'test1' with your actual collection name)
+  data_raw = getDocRaw(username)
+  
+  # Get the document data
+  doc = data_raw.get()
+  
+  if doc.exists:
+    # Convert the document to a dictionary
+    data = doc.to_dict()
+
+    # Check if the old field exists
+    if old_field in data:
+      # Update the document with the corrected field name
+      data_raw.update({
+        new_field: data[old_field],  # Copy the value from old_field to new_field
+        old_field: firestore.DELETE_FIELD  # Delete the old field
+      })
+      print(f"\nField '{old_field}' has been changed to '{new_field}'.\n")
+    else:
+      print(f"\nField '{old_field}' does not exist in the document.\n")
+  else:
+    print(f"\nDocument with ID {username} does not exist.\n")
+
 def getDoc(username):
   return db.collection("test1").document(f"{username}").get()
 
 def getDocRaw(username):
   return db.collection("test1").document(f"{username}")
+
+def updateOptions(username):
+  viewData(username)
+  while True:
+    print("\nUpdate Data Menu:")
+    print("1. Update Company Name")
+    print("2. Update Status")
+    print("3. Go Back")
+
+    update_choice = input("Enter your choice (1-3): ")
+
+    if update_choice == '1':
+      oldCompanyName = input("Enter the name you want to change: ")
+      newCompanyName = input("Enter the new company name: ")
+      updateCompanyName(username, oldCompanyName, newCompanyName)
+      viewData(username)
+      break
+    elif update_choice == '2':
+      updateStatus(username)
+      # Add logic here to update the status in your data structure
+    elif update_choice == '3':
+      print("\nReturning to main menu...\n")
+      break
+    else:
+      print("\nInvalid choice. Please enter a number between 1 and 3.\n")
 
 
 def main():
@@ -133,7 +194,7 @@ def main():
     print("6. Sign Out")
     print("7. Exit")
 
-    choice = input("Enter your choice (1-4): ")
+    choice = input("Enter your choice (1-7): ")
 
     if choice == '1':
       #  sign in
@@ -160,7 +221,7 @@ def main():
     elif choice == '5':
       # Are you signed in?
       if credentials:
-        updateData(credentials[0])
+        updateOptions(credentials[0])
       else:
         print('\nYou must sign in before updating data!\n')
     elif choice == '6':
@@ -174,6 +235,6 @@ def main():
       print("Exiting...")
       break
     else:
-      print("Invalid choice. Please enter a number between 1 and 4.")
+      print("Invalid choice. Please enter a number between 1 and 7.")
 
 main()
