@@ -1,6 +1,6 @@
 # Firebase User Management System
 
-This Python application allows users to manage their accounts and applications using Firebase Firestore as the backend database. Users can sign in, create accounts, view data, add applications, and update their application status.
+This Python application allows users to manage their job applications/status at various companies using Firebase Firestore as the backend database. Users can sign in, create accounts, view data, add applications, and update their application status.
 
 ## Features
 
