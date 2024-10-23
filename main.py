@@ -15,7 +15,6 @@ app = firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 def signIn(username="", password=""):
-  print(f"UN: {username} PW: {password}")
   if username and password:
     return (username, password, True)
   while True:
