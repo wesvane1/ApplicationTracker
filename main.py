@@ -203,7 +203,6 @@ def main():
       if not credentials:
         credentials = createAccount()
       else:
-        credentials = ""
         print("\nYou must sign out before creating a new account!\n")
     elif choice == '3':
       # Are you signed in?
